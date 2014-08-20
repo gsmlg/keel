@@ -1,0 +1,65 @@
+{
+  "name": "keel",
+  "version": "0.1.0",
+  "description": "Keel module keel",
+  "main": "src",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "webserver": "node node_modules/gulp/bin/gulp webserver",
+    "lint": "node node_modules/gulp/bin/gulp lint",
+    "beauty": "node node_modules/gulp/bin/gulp beauty",
+    "build": "node node_modules/gulp/bin/gulp build",
+    "test-serve": "node node_modules/gulp/bin/gulp test:serve",
+    "test": "node node_modules/gulp/bin/gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://gitserver/var/keel/git/keel.git"
+  },
+  "keywords": [
+    "keel"
+  ],
+  "author": "zdns",
+  "license": "zdns",
+  "spm": {
+    "main": "src/keel.js",
+    "dependencies": {
+      "jquery": "1.10.1",
+      "underscore": "1.6.0",
+      "backbone": "1.1.2"
+    },
+    "devDependencies": {},
+    "engines": {
+      "seajs": "2.3.0"
+    },
+    "tests": "tests/**/*spec.js"
+  },
+  "devDependencies": {
+    "colorful": "^2.1.0",
+    "csslint": "^0.10.0",
+    "event-stream": "^3.1.5",
+    "gulp": "^3.8.5",
+    "gulp-connect": "^2.0.6",
+    "gulp-csslint": "^0.1.4",
+    "gulp-jshint": "^1.6.4",
+    "gulp-webserver": "^0.4.0",
+    "js-beautify": "^1.5.1",
+    "jshint": "^2.5.1",
+    "jshint-stylish": "^0.2.0",
+    "karma": "~0.12.0",
+    "karma-growl-reporter": "^0.1.1",
+    "karma-jasmine": "~0.1.0",
+    "karma-mocha-reporter": "^0.2.6",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-seajs": "^0.1.1",
+    "keel-build-tool": "^0.1.1",
+    "rcloader": "^0.1.2",
+    "seajs": "~2.3.0",
+    "spm": "~3.0.0",
+    "uglify-js": "~2.4.0",
+    "underscore": "~1.6.0"
+  }
+}
