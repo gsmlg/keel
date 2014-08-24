@@ -1,5 +1,3 @@
-require = (id)->
-  Module.get id
+Script = require './require/script'
 
-
-exports.require = require
+exports.Script = Script

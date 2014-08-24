@@ -6,17 +6,18 @@ module.exports = function(gulp) {
 
     karmaCommonConf = {
         basePath: join(__dirname, '..'),
-        frameworks: ['jasmine', 'seajs'],
+        frameworks: ['jasmine', 'commonjs'],
         files: [
             {pattern: 'vendor/**/*.js', included: false, watched: false},
-            {pattern: 'src/**/*.js', included: false},
-            {pattern: 'test/**/*.json', included: false},
-            {pattern: 'test/**/*spec.js', included: false},
-            'test/test-main.js'
+            'lib/**/*.js',
+            'test/**/*spec.js',
+            'test/**/*spec.coffee',
+            {pattern: 'test/**/*.coffee', included: false}
         ],
         exclude: [],
         preprocessors: {
-            '**/*.coffee': ['coffee']
+            '**/*.coffee': ['coffee', 'commonjs'],
+            'lib/**/*.js': ['commonjs']
         },
         reporters: ['growl', 'mocha'],
         port: 9876,
@@ -27,8 +28,10 @@ module.exports = function(gulp) {
         coffeePreprocessor: {
             options: {
                 bare: true,
-                sourceMap: true
+                sourceMap: false
             }
+        },
+        commonjsPreprocessor: {
         }
     };
 
@@ -57,4 +60,17 @@ module.exports = function(gulp) {
         });
     });
 
+    gulp.task('test:debug', function(done){
+        var conf;
+        conf = _.extend({}, karmaCommonConf, {
+            autoWatch: false,
+            logLevel: 'DEBUG',
+            singleRun: true
+        });
+
+        karma.start(conf, function() {
+            done();
+            process.exit();
+        });
+    });
 };

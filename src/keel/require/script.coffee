@@ -1,3 +1,5 @@
+promise = require './promise'
+
 class Script
 
   head = document.getElementsByTagName('head')[0]
@@ -12,10 +14,12 @@ class Script
   remove = (el)->
     head.removeChild el
 
-  scripts = head.getElementsByTagname 'script'
+  scripts = head.getElementsByTagName 'script'
 
   currentAddingScript = null
   interactiveScript = null
+
+  @DEBUG: true
 
   @getCurrentScript: ->
     return currentAddingScript if currentAddingScript
@@ -25,12 +29,13 @@ class Script
       return interactiveScript
 
     for script in scripts
-      if scirpt.readyState = 'interactive'
+      if script.readyState = 'interactive'
         return interactiveScript = script
 
   constructor: (src)->
     @_create()
     @setUrl src
+    @deferred = promise.defer()
 
   setUrl: (src)->
     @src = src if src
@@ -38,29 +43,42 @@ class Script
 
   _create: ->
     @script = document.createElement 'script'
-    @script.type = 'type/javascript'
+    @script.type = 'text/javascript'
     @script.charset = 'utf-8'
-    @script.async = true
+    @script.async = 'async'
 
   append: ->
+    @addEvents()
     currentAddingScript = @script
     append @script
     currentAddingScript = null
 
   remove: ->
-    @remove @script
+    remove @script
 
   addEvents: ->
-    if 'onload' of @scirpt
+    if 'onload' of @script
       @script.onload = => @onload()
       @script.onerror = => @onerror()
     else
-      @script.onreadstatechange = =>
-        if @script.readyState in ['loaded', 'complete']
-          @onload()
+      @script.onreadystatechange = =>
+        @onload() if @script.readyState in ['loaded', 'complete']
+
+  clearEvents: ->
+    @script.onload = @script.onerror = @script.onreadystatechange = null
 
   onload: ->
-    @defer.resolve()
+    @deferred.resolve(@)
+    @clearEvents()
+    @remove() unless Script.DEBUG
 
   onerror: ->
-    @defer.reject()
+    @deferred.reject(@)
+    @clearEvents()
+    @remove() unless Script.DEBUG
+
+  then: (done, fail)->
+    @deferred.promise.then(done, fail)
+
+
+module.exports = Script
