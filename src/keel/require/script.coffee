@@ -32,6 +32,11 @@ class Script
       if script.readyState = 'interactive'
         return interactiveScript = script
 
+  # Public: constructor
+  #
+  # src - The src attribute of script as {string}.
+  #
+  # Returns the self as object.
   constructor: (src)->
     @_create()
     @setUrl src
@@ -39,33 +44,40 @@ class Script
 
   setUrl: (src)->
     @src = src if src
-    @script.src = @src if @src
+    @el.src = @src if @src
 
   _create: ->
-    @script = document.createElement 'script'
-    @script.type = 'text/javascript'
-    @script.charset = 'utf-8'
-    @script.async = 'async'
+    @el = document.createElement 'script'
+    @el.type = 'text/javascript'
+    @el.charset = 'utf-8'
+    @el.async = 'async'
+
+  url: ->
+    if @el.hasAttribute? # ie 6,7 fail
+      @el.src
+    else
+      # see http://msdn.microsoft.com/en-us/library/ms536429(VS.85).aspx
+      node.getAttribute("src", 4)
 
   append: ->
     @addEvents()
-    currentAddingScript = @script
-    append @script
+    currentAddingScript = @el
+    append @el
     currentAddingScript = null
 
   remove: ->
-    remove @script
+    remove @el
 
   addEvents: ->
-    if 'onload' of @script
-      @script.onload = => @onload()
-      @script.onerror = => @onerror()
+    if 'onload' of @el
+      @el.onload = => @onload()
+      @el.onerror = => @onerror()
     else
-      @script.onreadystatechange = =>
-        @onload() if @script.readyState in ['loaded', 'complete']
+      @el.onreadystatechange = =>
+        @onload() if @el.readyState in ['loaded', 'complete']
 
   clearEvents: ->
-    @script.onload = @script.onerror = @script.onreadystatechange = null
+    @el.onload = @el.onerror = @el.onreadystatechange = null
 
   onload: ->
     @deferred.resolve(@)
